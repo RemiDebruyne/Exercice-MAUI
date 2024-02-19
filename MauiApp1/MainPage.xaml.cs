@@ -1,62 +1,77 @@
-﻿namespace MauiApp1
+﻿using System.Net.NetworkInformation;
+
+namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
 
-        int count = 0;
 
         public Random rnd { get; set; } = new Random();
         public int Number { get; set; }
+        public int Hp { get; set; }
+        public string HpString { get; set; }
 
-        public int UserInput { get; set; }
+
         public MainPage()
         {
             InitializeComponent();
             Number = rnd.Next(0, 21);
+            Hp = 5;
+            HpString = "❤❤❤❤❤";
+            ReplayButton.IsVisible = false;
+            this.BindingContext = this;
+
         }
-
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
-
-
-
         private void Play(object sender, EventArgs e)
         {
-            if (sender is Entry entry)
-            {
-                string num = entry.Text;
-                //string num = e.NewTextValue;
-                int.TryParse(num, out int userInput);
-                UserInput = userInput;
-            }
-            
-            if (UserInput == Number)
+
+            int.TryParse(UserEntry.Text, out int valueToTest);
+
+            if (valueToTest == Number)
             {
                 Result.Text = $"You won !";
-                Result.TextColor = Color.FromHex("#4FF533");
+                Result.TextColor = Color.FromArgb("#4FF533");
+                ReplayButton.IsVisible = true;
+                return;
             }
 
-            if (UserInput > Number)
-            {
+            if (valueToTest > Number)
+
                 Result.Text = $"The number is too high";
-                Result.TextColor = Color.FromHex("#F52A1B");
-            }
-
-            if (UserInput < Number)
-            {
+            else
                 Result.Text = $"The number is too small";
-                Result.TextColor = Color.FromHex("#F52A1B");
+
+            Result.TextColor = Color.FromArgb("#F52A1B");
+            Hp--;
+
+            for (int i = 0; i < Hp; i++)
+            {
+                HpString += "❤";
             }
         }
+
+        private void Replay(object sender, EventArgs e)
+        {
+            Number = rnd.Next(0, 21);
+            Hp = 5;
+            HpString = "test";
+            ReplayButton.IsVisible = false;
+        }
+        #region counter
+        //public int UserInput { get; set; }
+
+        //private void OnCounterClicked(object sender, EventArgs e)
+        //{
+        //    count++;
+
+        //    if (count == 1)
+        //        CounterBtn.Text = $"Clicked {count} time";
+        //    else
+        //        CounterBtn.Text = $"Clicked {count} times";
+
+        //    SemanticScreenReader.Announce(CounterBtn.Text);
+        //}
+        #endregion
     }
 
 }
