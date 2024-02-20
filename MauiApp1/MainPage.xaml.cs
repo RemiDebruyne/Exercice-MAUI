@@ -10,14 +10,14 @@ namespace MauiApp1
         public int Number { get; set; }
         public int Hp { get; set; }
         public string HpString { get; set; }
-
+        public bool IsWon { get; set; }
+        public bool IsPlaying {  get; set; }
 
         public MainPage()
         {
             InitializeComponent();
             Number = rnd.Next(0, 21);
             Hp = 5;
-            HpString = "❤❤❤❤❤";
             ReplayButton.IsVisible = false;
             this.BindingContext = this;
 
@@ -29,9 +29,11 @@ namespace MauiApp1
 
             if (valueToTest == Number)
             {
-                Result.Text = $"You won !";
                 Result.TextColor = Color.FromArgb("#4FF533");
                 ReplayButton.IsVisible = true;
+                WinLabel.IsVisible = true;
+                PlayButton.IsVisible = false;
+
                 return;
             }
 
@@ -44,18 +46,33 @@ namespace MauiApp1
             Result.TextColor = Color.FromArgb("#F52A1B");
             Hp--;
 
+            if( Hp == 0 )
+            {
+                LostLabel.IsVisible = true;
+                ReplayButton.IsVisible = true;
+                PlayButton.IsVisible = false;
+            }
+
+            string tmpString = "";
+
             for (int i = 0; i < Hp; i++)
             {
-                HpString += "❤";
+                tmpString += "❤";
             }
+
+            HpBar.Text = tmpString;
         }
 
         private void Replay(object sender, EventArgs e)
         {
             Number = rnd.Next(0, 21);
             Hp = 5;
-            HpString = "test";
+            HpBar.Text = "❤❤❤❤❤";
             ReplayButton.IsVisible = false;
+            WinLabel.IsVisible = false;
+            LostLabel.IsVisible = false;
+            PlayButton.IsVisible = true;
+
         }
         #region counter
         //public int UserInput { get; set; }
